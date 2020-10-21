@@ -5,6 +5,8 @@ import argparse
 from keras.utils import get_file
 from ffhq_dataset.face_alignment import image_align
 from ffhq_dataset.landmarks_detector import LandmarksDetector
+import traceback
+import PIL
 #import multiprocessing
 
 LANDMARKS_MODEL_URL = 'http://dlib.net/files/shape_predictor_68_face_landmarks.dat.bz2'
@@ -48,7 +50,8 @@ if __name__ == "__main__":
             if os.path.isfile(fn):
                 continue
             print('Getting landmarks...')
-            for i, face_landmarks in enumerate(landmarks_detector.get_landmarks(raw_img_path), start=1):
+            raw_pil_image = PIL.Image.open(raw_img_path)
+            for i, face_landmarks in enumerate(landmarks_detector.get_landmarks(raw_pil_image), start=1):
                 try:
                     print('Starting face alignment...')
                     face_img_name = '%s_%02d.png' % (os.path.splitext(img_name)[0], i)
@@ -56,6 +59,8 @@ if __name__ == "__main__":
                     image_align(raw_img_path, aligned_face_path, face_landmarks, output_size=args.output_size, x_scale=args.x_scale, y_scale=args.y_scale, em_scale=args.em_scale, alpha=args.use_alpha)
                     print('Wrote result %s' % aligned_face_path)
                 except:
-                    print("Exception in face alignment!")
+                    traceback.print_exc()
+                    # print("Exception in face alignment!")
         except:
-            print("Exception in landmark detection!")
+            traceback.print_exc()
+            # print("Exception in landmark detection!")
