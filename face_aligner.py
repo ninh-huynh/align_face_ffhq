@@ -1,8 +1,8 @@
 import PIL
 import bz2
 from keras.utils import get_file
-from ffhq_dataset.face_alignment import image_align
-from ffhq_dataset.landmarks_detector import LandmarksDetector
+from .ffhq_dataset.face_alignment import image_align
+from .ffhq_dataset.landmarks_detector import LandmarksDetector
 
 def unpack_bz2(src_path):
   data = bz2.BZ2File(src_path).read()
